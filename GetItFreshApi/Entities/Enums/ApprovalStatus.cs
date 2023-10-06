@@ -1,6 +1,13 @@
 ﻿namespace GetItFreshApi.Entities.Enums
 {
-    public class ApprovalStatus
+    public enum ApprovalStatus
     {
+        Pending,
+        InReview,
+        Approved,
+        ChangesRequest,
+        DisApproved,
+        Draft,
+        RequestInReview
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace GetItFreshApi.Entities.Enums
 {
-    public Enum IdentificationType
+    public enum  IdentityType 
     {
         VotersCard,
-            NIN,
-            DriverLiscence
+        NIN,
+        DriverLiscence
     }
 }
