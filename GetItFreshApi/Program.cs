@@ -1,6 +1,7 @@
+using GetItFreshApi.DatabaseManagement;
 using Serilog;
 using Serilog.Events;
-
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container.
@@ -23,6 +24,8 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("Application is starting");
+    var connectionString = builder.Configuration.GetConnectionString("AppConnection");
+    builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

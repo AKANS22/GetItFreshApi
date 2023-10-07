@@ -2,7 +2,7 @@
 
 namespace GetItFreshApi.Entities
 {
-    public class Pricing
+    public class Pricing : BaseClass
     {
         public string Name { get; set; }
         public decimal Price { get; set; }
