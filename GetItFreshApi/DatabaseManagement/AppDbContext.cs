@@ -15,5 +15,6 @@ namespace GetItFreshApi.DatabaseManagement
         public DbSet<Pricing> Pricing { get; set; }
         public DbSet <Transaction> Transaction { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet <Product> Products { get; set; }
     } 
 }
