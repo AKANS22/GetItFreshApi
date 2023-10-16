@@ -3,6 +3,8 @@ using Serilog;
 using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
 using GetItFreshApi.Configuration;
+using GetItFreshApi.IRepository;
+using GetItFreshApi.GenericRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +37,7 @@ try
     builder.Services.AddSwaggerGen();
     builder.Host.UseSerilog();
     builder.Services.AddAutoMapper(typeof(AutoMapperInitialization));
+    builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
     var app = builder.Build();
     
@@ -43,7 +46,7 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI( c=> c.SwaggerEndpoint("/swagger/v1/swagger.json", "GetItFresh v1"));
     }
 
     app.UseSerilogRequestLogging();
@@ -51,8 +54,13 @@ try
     app.UseHttpsRedirection();
 
     app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-
+    app.UseRouting();
     app.UseAuthorization();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+
 
     app.MapControllers();
 
