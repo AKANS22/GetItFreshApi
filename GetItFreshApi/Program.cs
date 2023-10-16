@@ -2,6 +2,8 @@ using GetItFreshApi.DatabaseManagement;
 using Serilog;
 using Serilog.Events;
 using Microsoft.EntityFrameworkCore;
+using GetItFreshApi.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Add services to the container.
@@ -32,6 +34,7 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Host.UseSerilog();
+    builder.Services.AddAutoMapper(typeof(AutoMapperInitialization));
 
     var app = builder.Build();
     

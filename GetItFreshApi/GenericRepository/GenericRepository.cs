@@ -12,7 +12,7 @@ namespace GetItFreshApi.GenericRepository
         private readonly AppDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(AppDbContext dbContext, DbSet<T> dbSet)
+        public GenericRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
@@ -25,14 +25,12 @@ namespace GetItFreshApi.GenericRepository
 
         public void DeleteRange(IEnumerable<T> entities)
         {
-            _dbSet.RemoveRange(entities)
+            _dbSet.RemoveRange(entities);
         }
 
         public async Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null)
         {
-            var GetCheck = await _dbSet.FindAsync(expression);
-            if (GetCheck != null)
-            {
+           
                 IQueryable<T> query = _dbSet;
                 if(includes != null)
                 {
@@ -41,13 +39,34 @@ namespace GetItFreshApi.GenericRepository
                         query = query.Include(includeProperty);
                     }
                 }
-            }
+
+                return await query.AsNoTracking().FirstOrDefaultAsync(expression);
+            
             
         }
 
-        public Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
+        public async Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
         {
-            throw new NotImplementedException();
+            IQueryable<T> query = _dbSet;
+            if (expression !=null)
+            {
+               query = query.Where(expression);
+            }
+            
+            if (includes != null)
+            {
+                foreach (var includeProperty in includes)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            return await query.AsNoTracking().ToListAsync();
         }
 
         public async Task Insert(T entity)
