@@ -1,4 +1,6 @@
-﻿using GetItFreshApi.IRepository;
+﻿using AutoMapper;
+using GetItFreshApi.IRepository;
+using GetItFreshApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,11 +12,12 @@ namespace GetItFreshApi.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ILogger<FarmerController> logger;
-
-        public FarmerController(IUnitOfWork unitOfWork,  ILogger<FarmerController> logger)
+        private readonly IMapper mapper;
+        public FarmerController(IUnitOfWork unitOfWork,  ILogger<FarmerController> logger, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.logger = logger;
+            this.mapper = mapper;
 
         }
 
@@ -24,7 +27,8 @@ namespace GetItFreshApi.Controllers
             try
             {
                 var farmers = await unitOfWork.Farmer.GetAll();
-                return Ok(farmers);
+                var result = mapper.Map < IList<FarmerDTO>>(farmers);
+                return Ok(result);
             }
             catch (Exception ex)
             {

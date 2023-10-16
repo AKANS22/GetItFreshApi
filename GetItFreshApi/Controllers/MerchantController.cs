@@ -1,4 +1,7 @@
-﻿using GetItFreshApi.IRepository;
+﻿using AutoMapper;
+using GetItFreshApi.Entities;
+using GetItFreshApi.IRepository;
+using GetItFreshApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +13,13 @@ namespace GetItFreshApi.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ILogger<MerchantController> logger;
+        private readonly IMapper mapper;
 
-        public MerchantController(IUnitOfWork unitOfWork,  ILogger<MerchantController> logger)
+        public MerchantController(IUnitOfWork unitOfWork,  ILogger<MerchantController> logger, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.logger = logger;
-
+            this.mapper = mapper;   
         }
 
         [HttpGet]
@@ -24,7 +28,9 @@ namespace GetItFreshApi.Controllers
             try
             {
                 var Merchants = await unitOfWork.Merchant.GetAll();
-                return Ok(Merchants);
+                var result = mapper.Map<IList<MerchantDTO>>(Merchants);
+                return Ok(result);
+                
             }
             catch (Exception ex)
             {

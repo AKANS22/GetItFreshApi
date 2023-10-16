@@ -1,4 +1,7 @@
-﻿using GetItFreshApi.IRepository;
+﻿using AutoMapper;
+using GetItFreshApi.Entities;
+using GetItFreshApi.IRepository;
+using GetItFreshApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,12 +13,13 @@ namespace GetItFreshApi.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ILogger<TransactionController> logger;
+        private readonly IMapper mapper;
 
-        public TransactionController(IUnitOfWork unitOfWork, ILogger<TransactionController> logger)
+        public TransactionController(IUnitOfWork unitOfWork, ILogger<TransactionController> logger, IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
             this.logger = logger;
-
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -24,7 +28,8 @@ namespace GetItFreshApi.Controllers
             try
             {
                 var transaction = await unitOfWork.Transaction.GetAll();
-                return Ok(transaction);
+                var result = mapper.Map<IList<TransactionDTO>>(transaction);
+                return Ok(result);
             }
             catch (Exception ex)
             {
