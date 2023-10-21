@@ -24,6 +24,10 @@ namespace GetItFreshApi.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        
         public async Task <IActionResult> GetAllUsers()
         {
             try
@@ -40,6 +44,9 @@ namespace GetItFreshApi.Controllers
         }
 
         [HttpGet("{id:string}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUserById(string id)
         {
             try

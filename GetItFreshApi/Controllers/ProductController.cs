@@ -23,6 +23,9 @@ namespace GetItFreshApi.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAllProducts()
         {
             try
@@ -40,6 +43,9 @@ namespace GetItFreshApi.Controllers
         }
 
         [HttpGet("{id:string}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetProductById(string id)
         {
             try
