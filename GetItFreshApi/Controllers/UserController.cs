@@ -38,5 +38,21 @@ namespace GetItFreshApi.Controllers
                 return StatusCode(500, "Internal server error, please try again later");
             }
         }
+
+        [HttpGet("{id:string}")]
+        public async Task<IActionResult> GetUserById(string id)
+        {
+            try
+            {
+                var user = await unitOfWork.User.Get(c => c.Id == id);
+                var result = mapper.Map<UserDTO>(user);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Something went wromg in the {nameof(GetUserById)} endpoint");
+                return StatusCode(500, "Internal server error, please try again later");
+            }
+        }
     }
 }

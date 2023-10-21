@@ -27,8 +27,8 @@ namespace GetItFreshApi.Controllers
             try
             {
                 var farmers = await unitOfWork.Farmer.GetAll();
-                var result = mapper.Map<IList<FarmerDTO>>(farmers);
-                return Ok(result);
+                var results = mapper.Map<IList<FarmerDTO>>(farmers);
+                return Ok(results);
             }
             catch (Exception ex)
             {
@@ -38,18 +38,18 @@ namespace GetItFreshApi.Controllers
         }
 
 
-        [HttpGet("{id/int}")]
-        public async Task<IActionResult> GetAllFarmersById( int id)
+        [HttpGet("{id:string}")]
+        public async Task<IActionResult> GetFarmerById( string id)
         {
             try
             {
-                var farmers = await unitOfWork.Farmer.Get(c => c.Id == id);
-                var result = mapper.Map<IList<FarmerDTO>>(farmers);
+                var farmer = await unitOfWork.Farmer.Get( c => c.Id == id, new List<string> { "Products"});
+                var result = mapper.Map<FarmerDTO>(farmer);
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Something went wromg in the {nameof(GetAllFarmers)} endpoint");
+                logger.LogError(ex, $"Something went wromg in the {nameof(GetFarmerById)} endpoint");
                 return StatusCode(500, "Internal server error, please try again later");
             }
         }

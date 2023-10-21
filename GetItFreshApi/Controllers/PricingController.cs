@@ -27,14 +27,30 @@ namespace GetItFreshApi.Controllers
         {
             try
             {
-                var Pricing = await unitOfWork.Pricing.GetAll();
-                var result = mapper.Map<IList<PricingDTO>>(Pricing);
-                return Ok(result);
+                var Pricings = await unitOfWork.Pricing.GetAll();
+                var results = mapper.Map<IList<PricingDTO>>(Pricings);
+                return Ok(results);
                 
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Something went wromg in the {nameof(GetAllPricing)} endpoint");
+                return StatusCode(500, "Internal server error, please try again later");
+            }
+        }
+
+        [HttpGet("{id:string}")]
+        public async Task<IActionResult> GetPricingById(string id)
+        {
+            try
+            {
+                var pricing = await unitOfWork.Pricing.Get(c => c.Id == id);
+                var result = mapper.Map<PricingDTO>(pricing);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Something went wromg in the {nameof(GetPricingById)} endpoint");
                 return StatusCode(500, "Internal server error, please try again later");
             }
         }

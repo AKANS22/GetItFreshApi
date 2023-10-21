@@ -27,13 +27,29 @@ namespace GetItFreshApi.Controllers
         {
             try
             {
-                var transaction = await unitOfWork.Transaction.GetAll();
-                var result = mapper.Map<IList<TransactionDTO>>(transaction);
-                return Ok(result);
+                var transactions = await unitOfWork.Transaction.GetAll();
+                var results = mapper.Map<IList<TransactionDTO>>(transactions);
+                return Ok(results);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Something went wromg in the {nameof(GetAllTransaction)} endpoint");
+                return StatusCode(500, "Internal server error, please try again later");
+            }
+        }
+
+        [HttpGet("{id:string}")]
+        public async Task<IActionResult> GetTransactionById(string id)
+        {
+            try
+            {
+                var transaction = await unitOfWork.Transaction.Get(c => c.Id == id);
+                var result = mapper.Map<TransactionDTO>(transaction);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Something went wromg in the {nameof(GetTransactionById)} endpoint");
                 return StatusCode(500, "Internal server error, please try again later");
             }
         }
